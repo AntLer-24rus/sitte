@@ -30,10 +30,10 @@ define('URL', 'http://finance-expressantler.rhcloud.com/');
  * Configuration for: Folders
  * Here you define where your folders are. Unless you have renamed them, there's no need to change this.
  */
-define('CORE_PATH', 'application/core/');
-define('CONTROLLER_PATH', 'application/controllers/');
-define('MODELS_PATH', 'application/models/');
-define('VIEWS_PATH', 'application/views/');
+define('CORE_PATH', '../application/core/');
+define('CONTROLLER_PATH', '../application/controllers/');
+define('MODELS_PATH', '../application/models/');
+define('VIEWS_PATH', '../application/views/');
 /**
  * Configuration for: Database
  * This is the place where you define your database credentials, type etc.
