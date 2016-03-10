@@ -18,7 +18,7 @@
 <div id="bar">
     <div class="logo_container">
         <div class="logo">
-            <a href="http://chamaemelon.ru" title="Главная страница">
+            <a href="<?php echo URL;?>" title="Главная страница">
                 <img width="225" height="60" src="/images/camomile-flowers.png" alt="Chamaemelon">
             </a>
         </div>
