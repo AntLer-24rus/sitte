@@ -10,7 +10,7 @@ if (isset($data)) {
 } else {
     echo "<div>TODO</div>";
 }
-require_once 'application/core/gibberish-aes.php';
+require_once CORE_PATH . 'gibberish-aes.php';
 $key = hash('sha256', 'AntLer:205317');
 $data = 'Hello world';
 $iv = hash('md5', '205317:AntLer');
