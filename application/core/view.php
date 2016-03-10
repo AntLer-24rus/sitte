@@ -14,26 +14,26 @@ class View
     function append_view($view, $data = null)
     {
         ob_start();
-        include_once 'application/views/' . $view . '.php';
+        include_once VIEWS_PATH . $view . '.php';
         $this->views = $this->views . ob_get_clean();
     }
     function prepend_view($view, $data = null)
     {
         ob_start();
-        include_once 'application/views/' . $view . '.php';
+        include_once VIEWS_PATH . $view . '.php';
         $this->views = ob_get_clean() . $this->views;
     }
 
     function generate($view, $data = null)
     {
 
-        include 'application/views/' . $view . '.php';
+        include VIEWS_PATH .  $view . '.php';
     }
 
     function render()
     {
-        include_once 'application/views/header_view.php';
+        include_once VIEWS_PATH . 'header_view.php';
         echo $this->views;
-        include_once 'application//views/footer_view.php';
+        include_once VIEWS_PATH . 'footer_view.php';
     }
 }

@@ -21,7 +21,7 @@ class Route {
                     $this->url_controller = new $this->url_controller();
                 } catch (Exception $e) {
                     $data = 'Выброшено исключение: '.  $e->getMessage(). "\n";
-                    include VIEWS_PATH.'test_view.php';
+                    include VIEWS_PATH . 'test_view.php';
                     return;
                 }
 
