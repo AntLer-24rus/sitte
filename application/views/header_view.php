@@ -3,7 +3,8 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Управление деньгами</title>
-
+    <link rel='icon' href='favicon.ico' type='image/x-icon'>
+    <link rel='shortcut icon' href='favicon.ico' type='image/x-icon'>
     <link rel="stylesheet" type="text/css" href="/css/styleMy.css"/>
     <link rel="stylesheet" type="text/css" href="/css/bar.css"/>
     <link rel="stylesheet" type="text/css" href="/css/google_buttones.css"/>
