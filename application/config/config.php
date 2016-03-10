@@ -51,7 +51,7 @@ define('VIEWS_PATH', 'application/views/');
  * define('DB_PASS', 'xxx');
  */
 define('DB_TYPE', 'mysql');
-define('DB_HOST', $_ENV['OPENSHIFT_MYSQL_DB_HOST']);
+define('DB_HOST', $_SERVER['OPENSHIFT_MYSQL_DB_HOST']);
 define('DB_NAME', 'moneymanagement');
-define('DB_USER', $_ENV['OPENSHIFT_MYSQL_DB_USERNAME']);
-define('DB_PASS', $_ENV['OPENSHIFT_MYSQL_DB_PASSWORD']);
+define('DB_USER', $_SERVER['OPENSHIFT_MYSQL_DB_USERNAME']);
+define('DB_PASS', $_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD']);
