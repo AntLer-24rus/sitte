@@ -1,27 +1,31 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: AntLer
  * Date: 11.01.2015
  * Time: 21:07
  */
-class Users extends Model {
+class Users extends Model
+{
 
     /**
      * @param $login
      * @return array
      */
-    public function findUser($login) {
+    public function findUser($login)
+    {
         $sql = "SELECT * FROM users WHERE login=:login";
         $query = $this->db->prepare($sql);
-        // fetchAll() is the PDO method that gets all result rows
-        $query->execute(array(':login' => $login));
-        $result = $query->fetchAll();
 
-        return array(
-            "id" => $result[0]->id,
-            "name" => $result[0]->name,
-            "hash" => $result[0]->hash
-        );
+        $query->execute(array(':login' => $login));
+        $user = $query->fetchAll();
+
+        $result = array("success" => false);
+        if (count($user) != 0) {
+            $result["success"] = true;
+            $result["user_info"] = $user[0];
+        }
+        return $result;
     }
 }

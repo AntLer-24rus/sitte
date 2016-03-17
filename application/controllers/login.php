@@ -1,47 +1,56 @@
 <?php
+
 class Login extends Controller
 {
     function __construct()
     {
         parent::__construct();
-        $this->model = new Users($this->db);
+        $this->model = new Users($this);
     }
-    function index() {
+
+    function index()
+    {
         if (!isset($_SESSION['user_logged_in'])) {
-            $this->view->generate('login_view');
+            $this->view->render_template('login_view');
         } else {
-            $this->view->generate('userinfo_view', $_SESSION['user_name']);
+            $this->view->render_template('userinfo_view', $_SESSION['user_name']);
         }
     }
-    function login() {
 
-        if (!empty($_POST['login']) & !empty($_POST['pass'])) {
-            $user_info = $this->model->findUser($_POST['login']);
-            if (empty($user_info))
-            {
-                http_response_code(400);
-                $this->view->generate("df");
-                $this->view->generate('login_view', 'Неверный логин или пароль');
-                return;
-            }
-            if (password_verify($_POST['login'].':'.$_POST['pass'],$user_info['hash'])) {
-                Session::init();
-                Session::set('user_logged_in', true);
-                Session::set('user_id', $user_info['id']);
-                Session::set('user_name', $user_info['name']);
-                $this->view->generate('userinfo_view', $_POST['login']);
+    function login()
+    {
+        $response = array('success' => false);
+
+        if (!empty($_POST['login'])) {
+            $user = $this->model->findUser($_POST['login']);
+            if ($user["success"]) {
+                $RND = "test_string";//base64_encode(openssl_random_pseudo_bytes(32));
+                $iv = openssl_random_pseudo_bytes(16);
+                $encryptRND = openssl_encrypt($RND, "AES256", $user['user_info']['hash'], false, $iv);
+                $response["success"] = true;
+                $response["hash"] = base64_encode(base64_encode($iv) . ":" . $encryptRND);
             } else {
-                http_response_code(401);
-                $this->view->generate('login_view', 'Неверный логин или пароль');
+                $response['userpic_view'] = $this->view->get_string_template('login_view', 'Неверный логин или пароль!');
             }
+            /*            if (password_verify($_POST['login'] . ':' . $_POST['pass'], $user['hash'])) {
+                            Session::init();
+                            Session::set('user_logged_in', true);
+                            Session::set('user_id', $user['id']);
+                            Session::set('user_name', $user['name']);
+                            $this->view->render_template('userinfo_view', $_POST['login']);
+                        } else {
+                            http_response_code(401);
+                            $this->view->render_template('login_view', 'Неверный логин или пароль');
+                        }*/
         } else {
-            http_response_code(400);
-            $this->view->generate('login_view', 'Пустой логин или пароль!');
+            $response['userpic_view'] = $this->view->get_string_template('login_view', 'Пустой логин или пароль!');
         }
-
+        echo json_encode($response);
     }
-    function logout() {
+
+    function logout()
+    {
         Session::destroy();
-        $this->view->generate('login_view');
+        $this->view->render_template('login_view');
     }
 }

@@ -28,10 +28,10 @@ class All extends Controller
     {
         $data = $this->model->getAllInvoices();
         if (Session::get('user_id') == 1) {
-            $this->view->generate('all_view', $data);
+            $this->view->render_template('all_view', $data);
         } else {
             //Session::destroy();
-            $this->view->generate('TODO_view', 'Дописать экран предложения авторизации');
+            $this->view->render_template('TODO_view', 'Дописать экран предложения авторизации');
         }
 
 

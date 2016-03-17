@@ -45,9 +45,6 @@ abstract class Controller
     {
         // initialize the session
         $this->session = new Session();
-        if (!$this->session->userLoggedIn) {
-            $this->session->destroy();
-        }
         // create database connection
         $this->db = new Database();
         $this->view = new View($this);

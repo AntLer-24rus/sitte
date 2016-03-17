@@ -60,12 +60,24 @@ class View
      * @param null $data Передаваемые в представление данные
      * @return void
      */
-    function generate($view, $data = null)
+    function render_template($view, $data = null)
     {
 
         include VIEWS_PATH . $view . '.php';
     }
 
+    /**
+     * Генерация произвольного представления из файла {@link $view} с результатом помещаемым в строку
+     * @param string $view Название генерируемого представления
+     * @param null $data Передаваемые в представление данные
+     * @return string Сгенерированное пресдавление
+     */
+    function get_string_template($view, $data = null)
+    {
+        ob_start();
+        include VIEWS_PATH . $view . '.php';
+        return ob_get_clean();
+    }
     /**
      * Собрать все представления с шапкой и подвалом
      * @return void
