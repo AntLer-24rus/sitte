@@ -23,7 +23,7 @@ class Main extends Controller
     }
     function index()
     {
-        $this->view->append_view('TODO_view');
+        $this->view->append_view('TODO_view', 'есть в ветке develop');
         $this->view->render();
     }
 
