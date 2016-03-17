@@ -7,9 +7,18 @@
  * are STATIC, which means you can call them with Session::get(XXX);
  */
 class Session {
+    /**
+     * @var string
+     */
     public $id;
+    /**
+     * @var bool
+     */
     public $userLoggedIn;
 
+    /**
+     * Session constructor.
+     */
     public function __construct()
     {
         // if no session exist, start the session

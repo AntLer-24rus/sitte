@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: AntLer
- * Date: 09.01.2015
- * Time: 15:17
- */
 class Login extends Controller
 {
     function __construct()
