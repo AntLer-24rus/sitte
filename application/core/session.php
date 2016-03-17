@@ -8,10 +8,12 @@
  */
 class Session {
     /**
+     *  Идентификатор сессии
      * @var string
      */
     public $id;
     /**
+     * Состояние сессии
      * @var bool
      */
     public $userLoggedIn;
