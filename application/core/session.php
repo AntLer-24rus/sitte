@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Session class
  *
@@ -6,17 +7,23 @@
  * gets values, and closes the session properly (=logout). Those methods
  * are STATIC, which means you can call them with Session::get(XXX);
  */
-class Session {
+class Session
+{
     /**
-     *  Идентификатор сессии
+     * Идентификатор сессии
      * @var string
      */
-    public $id;
+    public $id = "";
     /**
      * Состояние сессии
      * @var bool
      */
-    public $userLoggedIn;
+    public $userLoggedIn = false;
+    /**
+     * Массив для данных о вошедшем пользователе
+     * @var array
+     */
+    public $userInfo = array();
 
     /**
      * Session constructor.
@@ -29,6 +36,7 @@ class Session {
             $this->id = session_id();
             if (isset($_SESSION['user_logged_in'])) {
                 $this->userLoggedIn = $_SESSION['user_logged_in'];
+                $this->userInfo = $_SESSION['user_info'];
             } else {
                 $this->userLoggedIn = false;
             }
@@ -49,6 +57,7 @@ class Session {
             }
         }
     }
+
     /**
      * sets a specific value to a specific key of the session
      * @param mixed $key
@@ -58,6 +67,7 @@ class Session {
     {
         $_SESSION[$key] = $value;
     }
+
     /**
      * gets/returns the value of a specific key of the session
      * @param mixed $key Usually a string, right ?
@@ -70,11 +80,13 @@ class Session {
         }
         return null;
     }
+
     /**
      * deletes the session (= logs the user out)
      */
-    public static function destroy()
+    public function destroy()
     {
+        $this->userLoggedIn = false;
         session_destroy();
     }
 }

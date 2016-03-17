@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/css/styleMy.css"/>
     <link rel="stylesheet" type="text/css" href="/css/bar.css"/>
     <link rel="stylesheet" type="text/css" href="/css/google_buttones.css"/>
+
     <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/js/js-sha256.js"
@@ -25,17 +26,26 @@
         </div>
         <div id="menu" style="align-self: flex-end">
             <ul class="menu">
-                <li><a href="/main" <?php echo $_SERVER['REQUEST_URI'] == '/main' ?  "class=\"selected\"" : "" ?>>Главная</a></li>
-                <li><a href="/all" <?php echo $_SERVER['REQUEST_URI'] == '/all' ?  "class=\"selected\"" : "" ?>>Все</a></li>
-                <li><a href="/day" <?php echo $_SERVER['REQUEST_URI'] == '/day' ?  "class=\"selected\"" : "" ?>>На день</a></li>
-                <li><a href="/week" <?php echo $_SERVER['REQUEST_URI'] == '/week' ?  "class=\"selected\"" : "" ?>>На неделю</a></li>
                 <?php
-                if (isset($_SESSION['user_logged_in'])) {
-                    echo '<li><a href="/range"';
-                    echo $_SERVER['REQUEST_URI'] == '/range' ? "class=\"selected\"" : "";
-                    echo '>В диапазоне</a></li>';
+                $tabs = json_decode(str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', file_get_contents("../application/config/site_map")), true);
+                foreach ($tabs as $key => $value) {
+                    if ($this->controller->session->userLoggedIn) {
+                        echo '<li>';
+                        echo '<a href="' . $value . ($_SERVER['REQUEST_URI'] == $value ? '" class="selected">' : '">') . $key . '</a>';
+                        echo '</li>';
+                    }
+
                 }
+
+
                 ?>
+                <!--                --><?php
+                //                if (isset($_SESSION['user_logged_in'])) {
+                //                    echo '<li><a href="/range"';
+                //                    echo $_SERVER['REQUEST_URI'] == '/range' ? "class=\"selected\"" : "";
+                //                    echo '>В диапазоне</a></li>';
+                //                }
+                //                ?>
             </ul>
         </div>
     </div>
