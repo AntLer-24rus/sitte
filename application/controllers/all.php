@@ -9,20 +9,16 @@ class All extends Controller
 {
     public function __construct() {
         parent::__construct();
-        // initialize the session
-        Session::init();
-        // if user is still not logged in, then destroy session, handle user as "not logged in" and
-        // redirect user to login page
-
+        throw new Exception('Тест');
+        $this->model = new Invoice($this);
     }
     function index()
     {
-        $invoices = $this->loadModel('invoice');
-        $data = $invoices->getAllInvoices();
+        $data = $this->model->getAllInvoices();
         if (Session::get('user_id') == 1) {
             $this->view->append_view('all_view', $data);
         } else {
-            Session::destroy();
+            //Session::destroy();
             $this->view->append_view('TODO_view', 'Дописать экран предложения авторизации');
         }
 
@@ -30,12 +26,11 @@ class All extends Controller
     }
     function content()
     {
-        $invoices = $this->loadModel('invoice');
-        $data = $invoices->getAllInvoices();
+        $data = $this->model->getAllInvoices();
         if (Session::get('user_id') == 1) {
             $this->view->generate('all_view', $data);
         } else {
-            Session::destroy();
+            //Session::destroy();
             $this->view->generate('TODO_view', 'Дописать экран предложения авторизации');
         }
 

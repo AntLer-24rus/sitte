@@ -9,8 +9,6 @@ class Main extends Controller
 {
     public function __construct() {
         parent::__construct();
-        // initialize the session
-        Session::init();
         // if user is still not logged in, then destroy session, handle user as "not logged in" and
         // redirect user to login page
         // Проверка пользователя и отказ в доступе

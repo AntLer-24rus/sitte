@@ -14,9 +14,13 @@
 function autoload($class) {
     // if file does not exist in LIBS_PATH folder [set it in config/config.php]
     if (file_exists(CORE_PATH . strtolower($class) . ".php")) {
-        require CORE_PATH . strtolower($class) . ".php";
+        require_once CORE_PATH . strtolower($class) . ".php";
+    } elseif (file_exists(MODELS_PATH . strtolower($class) . ".php")) {
+        require_once MODELS_PATH . strtolower($class) . ".php";
+    }  elseif (file_exists(CONTROLLER_PATH . strtolower($class) . ".php")) {
+        require_once CONTROLLER_PATH . strtolower($class) . ".php";
     } else {
-        exit ('Current dir is ' . getcwd() . '\nThe file ' . $class . '.php is missing in ' . CORE_PATH . ' folder.');
+        exit ("Current dir is " . getcwd() . "\nThe file " . $class . ".php is missing in " . CORE_PATH . " folder.");
     }
 }
 // spl_autoload_register defines the function that is called every time a file is missing. as we created this

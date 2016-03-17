@@ -7,8 +7,8 @@
  */
 class Week extends Controller
 {
-//    public function __construct() {
-//        parent::__construct();
+    public function __construct() {
+        parent::__construct();
 //        // initialize the session
 //        Session::init();
 //        // if user is still not logged in, then destroy session, handle user as "not logged in" and
@@ -21,10 +21,11 @@ class Week extends Controller
 //            // the hard way, via exit(). @see https://github.com/panique/php-login/issues/453
 //            //exit();
 //        }
-//    }
+    }
     function index()
     {
-        $this->view->generate('template_view', 'week_view');
+        $this->view->append_view('TODO_view', 'Дописать экран недельной загруженности');
+        $this->view->render();
     }
 
 }

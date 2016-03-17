@@ -68,10 +68,10 @@ $(document).ready(function(){
     console.log('   salt ' + encrypted.salt);
     console.log('decrypted');
     //console.log('   cleartext ' + decrypted.toString(CryptoJS.enc.Utf8));
-    $('#page')
-        .append('AES JS:')
-        .append($('<div>').attr('id','JSKey').text(encrypted))
-        .append($('<div>').attr('id','aes').text('Res - ' + decrypted.toString(CryptoJS.enc.Utf8)));
+    //$('#page')
+    //    .append('AES JS:')
+    //    .append($('<div>').attr('id','JSKey').text(encrypted))
+    //    .append($('<div>').attr('id','aes').text('Res - ' + decrypted.toString(CryptoJS.enc.Utf8)));
         //.append($('<div>').text(GibberishAES.dec(cr, key)))
     //    .append($('<div>').text(GibberishAES.dec(crypt, key)));
 });
@@ -146,9 +146,6 @@ $('.userpic')
                 $('.userpic_message').css('display', 'initial').text('Ошибка ' + stat + ' ' + errT);
             }
         });
-    })
-    .on('click', '#login_bt', function () {
-        $('#userpass').submit();
     });
 
 

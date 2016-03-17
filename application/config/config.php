@@ -10,14 +10,15 @@
  * Useful to show every little problem during development, but only show hard errors in production
  */
 error_reporting(E_ALL);
-ini_set("display_errors", 1);
+ini_set("display_errors", 0);
 
 
 ini_set('session.use_cookies',1);
-ini_set('session.use_only_cookies',1);
+//ini_set('session.use_only_cookies',1);
+ini_set('session.use_strict_mode',1);
 ini_set('session.use_trans_sid',0);
 ini_set('session.cookie_lifetime',1*3600);//Сессия длится 1 час
-ini_set('session.name','hfy3id234');
+ini_set('session.name','SID');
 
 /**
  * Configuration for: Base URL

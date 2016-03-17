@@ -7,8 +7,9 @@
  */
 class Day extends Controller {
 
-//    public function __construct() {
-//        parent::__construct();
+    public function __construct() {
+        parent::__construct();
+        $this->model = new Invoice($this);
 //        // initialize the session
 //        Session::init();
 //        // if user is still not logged in, then destroy session, handle user as "not logged in" and
@@ -20,11 +21,10 @@ class Day extends Controller {
 //            // the hard way, via exit(). @see https://github.com/panique/php-login/issues/453
 //            exit();
 //        }
-//    }
+    }
     function index()
     {
-        $invoices = $this->loadModel('invoice');
-        $data = $invoices->getDayInvoices(new DateTime(null,new DateTimeZone('Asia/Novosibirsk')));
+        $data = $this->model->getDayInvoices(new DateTime(null,new DateTimeZone('Asia/Novosibirsk')));
         foreach ($data as $row) {
 
         }

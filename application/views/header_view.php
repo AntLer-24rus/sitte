@@ -41,10 +41,10 @@
     </div>
     <div class="userpic">
         <?php
-        if (!isset($_SESSION['user_logged_in'])) {
-            include 'login_view.php';
-        } else {
+        if (Session::get('user_logged_in')) {
             include 'userinfo_view.php';
+        } else {
+            include 'login_view.php';
         }
         ?>
 

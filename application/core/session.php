@@ -7,6 +7,23 @@
  * are STATIC, which means you can call them with Session::get(XXX);
  */
 class Session {
+    public $id;
+    public $userLoggedIn;
+
+    public function __construct()
+    {
+        // if no session exist, start the session
+        if (session_id() == '') {
+            session_start();
+            $this->id = session_id();
+            if (isset($_SESSION['user_logged_in'])) {
+                $this->userLoggedIn = $_SESSION['user_logged_in'];
+            } else {
+                $this->userLoggedIn = false;
+            }
+        }
+    }
+
     /**
      * starts the session
      */
@@ -15,6 +32,10 @@ class Session {
         // if no session exist, start the session
         if (session_id() == '') {
             session_start();
+            $_SESSION['session_id'] = session_id();
+            if (!isset($_SESSION['user_logged_in'])) {
+                $_SESSION['user_logged_in'] = false;
+            }
         }
     }
     /**
@@ -36,6 +57,7 @@ class Session {
         if (isset($_SESSION[$key])) {
             return $_SESSION[$key];
         }
+        return null;
     }
     /**
      * deletes the session (= logs the user out)

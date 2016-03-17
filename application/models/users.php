@@ -7,6 +7,10 @@
  */
 class Users extends Model {
 
+    /**
+     * @param $login
+     * @return array
+     */
     public function findUser($login) {
         $sql = "SELECT * FROM users WHERE login=:login";
         $query = $this->db->prepare($sql);
