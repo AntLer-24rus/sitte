@@ -13,20 +13,55 @@ class Session
      * Идентификатор сессии
      * @var string
      */
-    public $id = "";
+    private $id = "";
     /**
      * Состояние сессии
      * @var bool
      */
-    public $userLoggedIn = false;
+    private $userLoggedIn = false;
     /**
      * Массив для данных о вошедшем пользователе
      * @var array
      */
-    public $userInfo = array();
+    private $userInfo = array();
 
     /**
-     * Session constructor.
+     * Устанавливает информацию о пользователе
+     * @param array $keyOrArray Может быть именем свойства или массивом со свойствами
+     * @param mixed $value Значение свойсва переданного первым параметром
+     */
+    public function setUserInfo($keyOrArray, $value = null)
+    {
+        if (empty($value)) {
+            $_SESSION['user_info'] = $keyOrArray;
+            $this->userInfo = $keyOrArray;
+        } else {
+            $_SESSION['user_info'][$keyOrArray] = $value;
+            $this->userInfo[$keyOrArray] = $value;
+        }
+
+    }
+
+    /**
+     * Отдает свойство пользователя или весь массив свойств
+     * @param null $key Имя свойства, если не заданно отдает весь массив
+     * @return array
+     */
+    public function getUserInfo($key = null)
+    {
+        if (empty($key)) {
+            return $this->userInfo;
+        } else {
+            if (isset($this->userInfo[$key])) {
+                return $this->userInfo[$key];
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Session constructor. старует сессия и заполняет переменные из массива $_SESSION
      */
     public function __construct()
     {
@@ -36,57 +71,51 @@ class Session
             $this->id = session_id();
             if (isset($_SESSION['user_logged_in'])) {
                 $this->userLoggedIn = $_SESSION['user_logged_in'];
+            }
+            if (isset($_SESSION['user_info'])) {
                 $this->userInfo = $_SESSION['user_info'];
-            } else {
-                $this->userLoggedIn = false;
             }
         }
     }
 
     /**
-     * starts the session
+     *  Вход пользователя
      */
-    public static function init()
+    public function login()
     {
-        // if no session exist, start the session
-        if (session_id() == '') {
-            session_start();
-            $_SESSION['session_id'] = session_id();
-            if (!isset($_SESSION['user_logged_in'])) {
-                $_SESSION['user_logged_in'] = false;
-            }
-        }
+        $this->userLoggedIn = true;
+        $_SESSION['user_logged_in'] = true;
     }
 
     /**
-     * sets a specific value to a specific key of the session
-     * @param mixed $key
-     * @param mixed $value
+     * Возвращает статус пользователя
+     * @return bool
      */
-    public static function set($key, $value)
+    public function isLogin()
     {
-        $_SESSION[$key] = $value;
+        return $this->userLoggedIn;
     }
 
     /**
-     * gets/returns the value of a specific key of the session
-     * @param mixed $key Usually a string, right ?
-     * @return mixed
+     * Проверяет разрешения пользователя на доступ к контенту
+     * @param string $object Объект для проверки разрешений
+     * @return bool
      */
-    public static function get($key)
+    public function verifyUserPermission($object)
     {
-        if (isset($_SESSION[$key])) {
-            return $_SESSION[$key];
-        }
-        return null;
+        // TODO: проверка разрешений на доступ к контенту
+        return true;
     }
 
     /**
-     * deletes the session (= logs the user out)
+     * Удаляет информацию пользователя из сесии
      */
-    public function destroy()
+    public function logout()
     {
         $this->userLoggedIn = false;
-        session_destroy();
+        $this->id = "";
+        $this->userInfo = array();
+        $_SESSION['user_logged_in'] = false;
+        unset($_SESSION['user_info']);
     }
 }

@@ -39,108 +39,111 @@ function hex2a(hex) {
 
 $(document).ready(function () {
 
-    var rawData = atob($('#crypt').text());
-
-    var crypttext = btoa(rawData.substr(16));
-
-    var iv = CryptoJS.enc.Hex.parse(md5('205317:AntLer'));
-    var key = CryptoJS.enc.Hex.parse(sha256('AntLer:205317'));
-
-    var encrypted = CryptoJS.AES.encrypt('Hello world', key,
-        {
-            iv: iv,
-            mode: CryptoJS.mode.CBC,
-            keySize: 256 / 32
-        });
-
-    var decrypted = CryptoJS.AES.decrypt($('#crypt').text(), key,
-        {
-            iv: iv,
-            mode: CryptoJS.mode.CBC,
-            //padding: CryptoJS.pad.NoPadding,
-            keySize: 256 / 32
-        });
-    //var decrypted = CryptoJS.AES.decrypt($('#crypt').text(),key);
-    //console.log('encrypted');
-    //console.log('   ciphertext ' + encrypted.ciphertext.toString());
-    //console.log('   iv ' + encrypted.iv.toString());
-    //console.log('   key ' + encrypted.key.toString());
-    //console.log('   salt ' + encrypted.salt);
-    //console.log('decrypted');
-    //console.log('   cleartext ' + decrypted.toString(CryptoJS.enc.Utf8));
-    //$('#page')
-    //    .append('AES JS:')
-    //    .append($('<div>').attr('id','JSKey').text(encrypted))
-    //    .append($('<div>').attr('id','aes').text('Res - ' + decrypted.toString(CryptoJS.enc.Utf8)));
-    //.append($('<div>').text(GibberishAES.dec(cr, key)))
-    //    .append($('<div>').text(GibberishAES.dec(crypt, key)));
 });
+
+function errorAjax(httpR, type_error) {
+    switch (type_error) {
+        case "error":
+        {
+            var response = JSON.parse(httpR.responseText);
+            switch (httpR.status) {
+                case 400:
+                {
+                    $('.userpic_message').text("Ошибка 400 : " + response.error_message).show();
+                    break;
+                }
+                case 401:
+                {
+                    $('.userpic_message').text("Ошибка 401 : " + response.error_message).show();
+                    break;
+                }
+                default:
+                {
+                    $('.userpic_message').text("Неизвестная ошибка").show();
+                }
+            }
+            break;
+        }
+        default:
+        {
+            $('.userpic_message').text("Неизвестная ошибка").show();
+            break;
+        }
+    }
+
+}
+
 $('.userpic')
     .on('submit', function () {
         $('.userpic_message').hide();
-        $.ajax({
-            type: 'POST',
-            url: 'login/login',
-            data: $('#login').serialize(),
-            success: function (json_data) {
-                var response = JSON.parse(json_data);
-                if (response.success) {
-                    var rawData = atob(response.hash);
-                    var iv = CryptoJS.enc.Base64.parse(rawData.split(":")[0]);
-                    var encryptedtext = rawData.split(":")[1];//CryptoJS.enc.Base64.parse(rawData.split(":")[1]);
-                    var key = CryptoJS.enc.Hex.parse(sha256($('#login').val() + ":" + $('#pass').val()));
-                    var decrypted = CryptoJS.AES.decrypt(encryptedtext, key, {iv: iv});
-                    console.log('decrypted : ' + decrypted.toString(CryptoJS.enc.Utf8));
-                } else {
-                    $('.userpic').empty().append(response.userpic_view);
-                    $('.userpic_message').show();
-                }
-            },
-            error: function (httpR, stat, errT) {
+        var login = $('#login').val();
+        var pass = $('#pass').val();
+        if (login == "" || pass == "") {
+            $('.userpic_message').text("Пустой логин или пароль").show();
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: 'login/login',
+                data: {data: {func: "step_one", arg: login}},
+                dataType: "json",
+                success: function (json_data) {
+                    if (json_data.success) {
+                        var rawData = atob(json_data.hash);
 
-                switch (httpR.status) {
-                    case 400:
-                    {
-                        $('.userpic').empty().append(httpR.responseText);
-                        break;
+                        var iv = CryptoJS.enc.Hex.parse(rawData.split(":")[0]);
+                        var rnd_key_encoded = rawData.split(":")[1];
+                        var key = CryptoJS.enc.Hex.parse(sha256(login + ":" + pass));
+
+                        var rnd_key = CryptoJS.AES.decrypt(rnd_key_encoded, key, {iv: iv}).toString(CryptoJS.enc.Utf8);
+
+                        if (rnd_key == "") {
+                            $('#pass').val("");
+                            $('.userpic_message').text("Неверный логин или пароль").show();
+                        } else {
+                            var crypt_pwd = CryptoJS.AES.encrypt(pass, CryptoJS.enc.Hex.parse(rnd_key), {iv: CryptoJS.lib.WordArray.random(128 / 8)});
+
+                            var verification = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(crypt_pwd.iv.toString() + ':' + crypt_pwd.toString()));
+
+                            $.ajax({
+                                type: 'POST',
+                                url: 'login/login',
+                                data: {data: {func: "step_two", arg: verification}},
+                                dataType: "json",
+                                success: function (json_data) {
+                                    if ("userpic_view" in json_data) {
+                                        $('.userpic').empty().append(json_data.userpic_view);
+                                        $('.userpic_message').show();
+                                    }
+                                }
+                            });
+                        }
+
+                    } else {
+                        if ("userpic_view" in json_data) {
+                            $('.userpic').empty().append(json_data.userpic_view);
+                            $('.userpic_message').show();
+                        } else {
+                            $('.userpic_message').text("Неизвестная ошибка").show();
+                        }
                     }
-                    case 401:
-                    {
-                        $('.userpic').empty().append(httpR.responseText);
-                        break;
-                    }
-                    default:
-                    {
-                        $('.userpic').empty().append(httpR.responseText);
-                    }
-                }
-                $('.userpic_message').css('display', 'initial');
-            }
-        });
+                },
+                error: errorAjax
+            });
+        }
     })
     .on('click', '#logout_bt', function () {
         $.ajax({
             url: 'login/logout',
-            success: function (data) {
-                $('.userpic_message').css('display', 'none');
-                $('.userpic').empty().append(data);
-                if (location.pathname == '/range' || location.pathname == '/all') {
-                    $('#page').empty();
-                }
-                if (location.pathname == '/all') {
-                    $('ul.menu li a:contains("Все")').addClass('selected');
-                    $.ajax({
-                        type: 'GET',
-                        url: 'all/content',
-                        success: function (data) {
-                            $('#page').empty().append(data);
-                        }
-                    });
+            dataType: "json",
+            success: function (json_data) {
+                if ("userpic_view" in json_data) {
+                    $('.userpic').empty().append(json_data.userpic_view);
+                    $('.userpic_message').show();
+                } else {
+                    $('.userpic_message').text("Неизвестная ошибка").show();
                 }
             },
-            error: function (httpR, stat, errT) {
-                $('.userpic_message').css('display', 'initial').text('Ошибка ' + stat + ' ' + errT);
-            }
+            error: errorAjax
         });
     });
 

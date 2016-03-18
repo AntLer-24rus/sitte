@@ -7,11 +7,4 @@
     <input name="pass" id="pass" placeholder="Пароль" type="password" class="edit_fild"/>
     <button type="submit" class="action" title="">Войти</button>
 </form>
-<div class="userpic_message">
-    <?php
-    if (isset($data)) {
-        echo $data;
-    }
-    ?>
-</div>
-</div>
+<div class="userpic_message"><?php echo isset($data) ? $data : "" ?></div>

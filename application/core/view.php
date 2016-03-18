@@ -78,6 +78,7 @@ class View
         include VIEWS_PATH . $view . '.php';
         return ob_get_clean();
     }
+
     /**
      * Собрать все представления с шапкой и подвалом
      * @return void
@@ -120,11 +121,14 @@ class View
                             echo '<a href="' . $url . ($_SERVER['REQUEST_URI'] == $url ? '" class="selected">' : '">') . $name . '</a>';
                             echo '</li>';
                         }
-                        if ($this->controller->session->userLoggedIn) {
-                            if ($this->controller->session->userInfo['id'] == 1) {
+                        if ($this->controller->session->isLogin()) {
+                            $userID = $this->controller->session->getUserInfo('id');
+                            if ($userID == 1 || $userID == 2) {
                                 $url = '/invoices';
                                 $name = 'Счета';
+                                echo '<li>';
                                 echo '<a href="' . $url . ($_SERVER['REQUEST_URI'] == $url ? '" class="selected">' : '">') . $name . '</a>';
+                                echo '</li>';
                             }
                         }
                         ?>
@@ -133,7 +137,7 @@ class View
             </div>
             <div class="userpic">
                 <?php
-                if (Session::get('user_logged_in')) {
+                if ($this->controller->session->isLogin()) {
                     include VIEWS_PATH . 'userinfo_view.php';
                 } else {
                     include VIEWS_PATH . 'login_view.php';

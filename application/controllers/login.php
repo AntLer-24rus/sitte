@@ -20,37 +20,70 @@ class Login extends Controller
     function login()
     {
         $response = array('success' => false);
-
-        if (!empty($_POST['login'])) {
-            $user = $this->model->findUser($_POST['login']);
-            if ($user["success"]) {
-                $RND = "test_string";//base64_encode(openssl_random_pseudo_bytes(32));
-                $iv = openssl_random_pseudo_bytes(16);
-                $encryptRND = openssl_encrypt($RND, "AES256", $user['user_info']['hash'], false, $iv);
-                $response["success"] = true;
-                $response["hash"] = base64_encode(base64_encode($iv) . ":" . $encryptRND);
-            } else {
-                $response['userpic_view'] = $this->view->get_string_template('login_view', 'Неверный логин или пароль!');
-            }
-            /*            if (password_verify($_POST['login'] . ':' . $_POST['pass'], $user['hash'])) {
-                            Session::init();
-                            Session::set('user_logged_in', true);
-                            Session::set('user_id', $user['id']);
-                            Session::set('user_name', $user['name']);
-                            $this->view->render_template('userinfo_view', $_POST['login']);
-                        } else {
-                            http_response_code(401);
-                            $this->view->render_template('login_view', 'Неверный логин или пароль');
-                        }*/
+        if (empty($_POST["data"])) {
+            http_response_code(400);
+            $response["error_message"] = "Неправильные параметры запроса";
         } else {
-            $response['userpic_view'] = $this->view->get_string_template('login_view', 'Пустой логин или пароль!');
+            $request = $_POST["data"];
+            if (empty($request["func"]) | empty($request["arg"])) {
+                http_response_code(400);
+                $response["error_message"] = "Неправильные параметры запроса";
+            } else {
+                switch ($request["func"]) {
+                    case "step_one": {
+                        $user = $this->model->findUser($request["arg"]);
+                        $RND = bin2hex(openssl_random_pseudo_bytes(32));
+                        if ($user["success"]) {
+                            $this->session->setUserInfo($user["user_info"]);
+                            $this->session->setUserInfo("rnd_key", $RND);
+                            $user_key = hex2bin($user["user_info"]["hash"]);
+                        } else {
+                            $user_key = openssl_random_pseudo_bytes(32);
+                        }
+                        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length("aes-256-cbc"));
+                        $encryptRND = openssl_encrypt($RND, "aes-256-cbc", $user_key, false, $iv);
+                        $response["success"] = true;
+                        $response["hash"] = base64_encode(bin2hex($iv) . ":" . $encryptRND);
+                        break;
+                    }
+                    case "step_two": {
+                        $RND = $this->session->getUserInfo("rnd_key");
+                        if (empty($RND)) {
+                            // TODO: Дописать обработку несуществующего пользователя
+                            return;
+                        }
+                        $rawData = explode(':', base64_decode($request["arg"]));
+
+                        $pass = openssl_decrypt($rawData[1], 'aes-256-cbc', hex2bin($RND), false, hex2bin($rawData[0]));
+
+                        if (!$pass) {
+                            // TODO: Обработать дешифровки
+                            return;
+                        }
+                        $test_hash = hash("sha256", $this->session->getUserInfo("login") . ":" . $pass);
+                        if ($test_hash == $this->session->getUserInfo("hash")) {
+                            $this->session->login();
+                            $response["success"] = true;
+                            $response["userpic_view"] = $this->view->get_string_template("userinfo_view");
+                        } else {
+                            // TODO: неправильный пароль
+                        }
+                        break;
+                    }
+                    case "step_three": {
+
+                    }
+                }
+            }
         }
         echo json_encode($response);
     }
 
     function logout()
     {
-        Session::destroy();
-        $this->view->render_template('login_view');
+        $this->session->logout();
+        $response["success"] = true;
+        $response["userpic_view"] = $this->view->get_string_template("login_view");
+        echo json_encode($response);
     }
 }
