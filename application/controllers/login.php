@@ -56,17 +56,17 @@ class Login extends Controller
 
                         $pass = openssl_decrypt($rawData[1], 'aes-256-cbc', hex2bin($RND), false, hex2bin($rawData[0]));
 
-                        if (!$pass) {
-                            // TODO: Обработать дешифровки
-                            return;
-                        }
-                        $test_hash = hash("sha256", $this->session->getUserInfo("login") . ":" . $pass);
-                        if ($test_hash == $this->session->getUserInfo("hash")) {
-                            $this->session->login();
-                            $response["success"] = true;
-                            $response["userpic_view"] = $this->view->get_string_template("userinfo_view");
+                        if ($pass) {
+                            $test_hash = hash("sha256", $this->session->getUserInfo("login") . ":" . $pass);
+                            if ($test_hash == $this->session->getUserInfo("hash")) {
+                                $this->session->login();
+                                $response["success"] = true;
+                                $response["userpic_view"] = $this->view->get_string_template("userinfo_view");
+                            } else {
+                                // TODO: неправильный пароль
+                            }
                         } else {
-                            // TODO: неправильный пароль
+                            // TODO: Обработать дешифровки
                         }
                         break;
                     }

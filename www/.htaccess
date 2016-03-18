@@ -1,4 +1,11 @@
 RewriteEngine On
+
+RewriteLog logs/apache-rewrite_log
+RewriteLogLevel 3
+
+RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^.*/js/.*$ index.php?file_path=$1
+
 RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule .* index.php [L]
+    RewriteRule .* index.php [L]

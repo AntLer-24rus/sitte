@@ -17,7 +17,6 @@ class Users extends Model
     {
         $sql = "SELECT * FROM users WHERE login=:login";
         $query = $this->db->prepare($sql);
-
         $query->execute(array(':login' => $login));
         $user = $query->fetchAll();
 

@@ -85,6 +85,8 @@ class Session
     {
         $this->userLoggedIn = true;
         $_SESSION['user_logged_in'] = true;
+        unset($_SESSION['user_info']['hash']);
+        unset($_SESSION['user_info']['rnd_key']);
     }
 
     /**

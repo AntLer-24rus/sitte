@@ -90,19 +90,22 @@ class View
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
             <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
             <title>Управление деньгами</title>
-            <link rel='icon' href='favicon.ico' type='image/x-icon'>
-            <link rel='shortcut icon' href='favicon.ico' type='image/x-icon'>
+
+            <link rel='icon' href='/favicon.ico' type='image/x-icon'>
+            <link rel='shortcut icon' href='/favicon.ico' type='image/x-icon'>
+
             <link rel="stylesheet" type="text/css" href="/css/styleMy.css"/>
             <link rel="stylesheet" type="text/css" href="/css/bar.css"/>
             <link rel="stylesheet" type="text/css" href="/css/google_buttones.css"/>
 
             <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
             <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
-            <script type="text/javascript" src="/js/js-sha256.js"
-            <script type="text/javascript" src="http://point-at-infinity.org/jsaes/jsaes.js"></script>
-            <script type="text/javascript" src="/js/AES-JS.js"></script>
-            <script type="text/javascript" src="/js/md5.js"></script>
+
+            <script type="text/javascript" src="/js/cryptojs-sha256.js"></script>
+            <script type="text/javascript" src="/bower_components/cryptojslib/rollup/aes.js"></script>
+            <!--            <script type="text/javascript" src="/js/cryptojs-aes.js"></script>-->
         </head>
         <body>
         <div id="bar">
@@ -114,42 +117,17 @@ class View
                 </div>
                 <div id="menu" style="align-self: flex-end">
                     <ul class="menu">
-                        <?php
-                        $tabs = json_decode(str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', file_get_contents("../application/config/site_map")), true);
-                        foreach ($tabs as $name => $url) {
-                            echo '<li>';
-                            echo '<a href="' . $url . ($_SERVER['REQUEST_URI'] == $url ? '" class="selected">' : '">') . $name . '</a>';
-                            echo '</li>';
-                        }
-                        if ($this->controller->session->isLogin()) {
-                            $userID = $this->controller->session->getUserInfo('id');
-                            if ($userID == 1 || $userID == 2) {
-                                $url = '/invoices';
-                                $name = 'Счета';
-                                echo '<li>';
-                                echo '<a href="' . $url . ($_SERVER['REQUEST_URI'] == $url ? '" class="selected">' : '">') . $name . '</a>';
-                                echo '</li>';
-                            }
-                        }
-                        ?>
+                        <?php include VIEWS_PATH . 'menu_view.php'; ?>
                     </ul>
                 </div>
             </div>
             <div class="userpic">
-                <?php
-                if ($this->controller->session->isLogin()) {
-                    include VIEWS_PATH . 'userinfo_view.php';
-                } else {
-                    include VIEWS_PATH . 'login_view.php';
-                }
-                ?>
+                <?php include VIEWS_PATH . ($this->controller->session->isLogin() ? 'userinfo_view.php' : 'login_view.php'); ?>
             </div>
         </div>
         <div id="wrapper">
             <div id="page">
-                <?php
-                echo $this->views;
-                ?>
+                <?php echo $this->views; ?>
             </div>
             <div id="footer">
                 <a href="http://vk.com/antler">code by AntLer &copy; 2015</a>

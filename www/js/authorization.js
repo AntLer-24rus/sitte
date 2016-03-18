@@ -92,7 +92,7 @@ $('.userpic')
 
                         var iv = CryptoJS.enc.Hex.parse(rawData.split(":")[0]);
                         var rnd_key_encoded = rawData.split(":")[1];
-                        var key = CryptoJS.enc.Hex.parse(sha256(login + ":" + pass));
+                        var key = CryptoJS.SHA256(login + ":" + pass).toString();
 
                         var rnd_key = CryptoJS.AES.decrypt(rnd_key_encoded, key, {iv: iv}).toString(CryptoJS.enc.Utf8);
 
