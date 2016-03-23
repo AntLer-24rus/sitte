@@ -21,19 +21,19 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    align-content: flex-end;
-    align-items: center;
+    /*align-content: flex-end;*/
+    /*align-items: center;*/
     height: 60px;
     min-width: 140px;
     max-width: 395px;
-    padding: 0 5px;
-    /*background: #44e938;*/
+    padding: 10px 5px 0 5px;
     float: right;
     position: relative;
 }
 
 .userpic_message {
     display: none;
+    margin-top: -15px;
     text-align: center;
     color: red;
     min-width: 390px;

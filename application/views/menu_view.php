@@ -24,7 +24,7 @@ $private_tabs = array(
 
 if ($this->controller->session->isLogin()) {
     foreach ($private_tabs as $name => $url) {
-        if ($this->controller->session->verifyUserPermission(substr($url, 1))) {
+        if ($this->controller->session->verifyUserPermission($url)) {
             echo '<li>';
             echo '<a href="' . $url . ($_SERVER['REQUEST_URI'] == $url ? '" class="selected">' : '">') . $name . '</a>';
             echo '</li>';

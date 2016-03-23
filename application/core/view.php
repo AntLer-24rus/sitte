@@ -100,11 +100,13 @@ class View
             <link rel="stylesheet" type="text/css" href="/css/bar.css"/>
             <link rel="stylesheet" type="text/css" href="/css/google_buttones.css"/>
 
-            <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
-            <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+            <!--            <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>-->
+            <!--            <script type="text/javascript" src="/js/jquery-ui.min.js"></script>-->
 
-            <script type="text/javascript" src="/js/cryptojs-sha256.js"></script>
-            <script type="text/javascript" src="/bower_components/cryptojslib/rollup/aes.js"></script>
+            <!--            <script type="text/javascript" src="/js/cryptojs-sha256.js"></script>-->
+            <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+            <script type="text/javascript" src="/bower_components/cryptojslib/rollups/aes.js"></script>
+            <script type="text/javascript" src="/bower_components/cryptojslib/rollups/sha256.js"></script>
             <!--            <script type="text/javascript" src="/js/cryptojs-aes.js"></script>-->
         </head>
         <body>

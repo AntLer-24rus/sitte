@@ -62,6 +62,10 @@ class Login extends Controller
                                 $this->session->login();
                                 $response["success"] = true;
                                 $response["userpic_view"] = $this->view->get_string_template("userinfo_view");
+                                $origin_uri = $_SERVER['REQUEST_URI'];
+                                $_SERVER['REQUEST_URI'] = $request['cur_uri'];
+                                $response["tabs_from_menu"] = $this->view->get_string_template("menu_view");
+                                $_SERVER['REQUEST_URI'] = $origin_uri;
                             } else {
                                 // TODO: неправильный пароль
                             }
@@ -70,20 +74,16 @@ class Login extends Controller
                         }
                         break;
                     }
-                    case "step_three": {
-
-                    }
                 }
             }
         }
-        echo json_encode($response);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($response, JSON_UNESCAPED_UNICODE);
     }
 
     function logout()
     {
         $this->session->logout();
-        $response["success"] = true;
-        $response["userpic_view"] = $this->view->get_string_template("login_view");
-        echo json_encode($response);
+        header('Location:' . URL . 'main');
     }
 }
