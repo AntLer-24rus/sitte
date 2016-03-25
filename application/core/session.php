@@ -24,10 +24,11 @@ class Session
      * @var array
      */
     private $userInfo = array();
+    private $userPermissions = array();
 
     /**
      * Устанавливает информацию о пользователе
-     * @param array $keyOrArray Может быть именем свойства или массивом со свойствами
+     * @param mixed $keyOrArray Может быть именем свойства или массивом со свойствами
      * @param mixed $value Значение свойсва переданного первым параметром
      */
     public function setUserInfo($keyOrArray, $value = null)
@@ -40,6 +41,22 @@ class Session
             $this->userInfo[$keyOrArray] = $value;
         }
 
+    }
+
+    /**
+     * Устанавливает информацию о разрешения пользователя
+     * @param mixed $keyOrArray Может быть именем свойства или массивом со свойствами
+     * @param mixed $value Значение свойсва переданного первым параметром
+     */
+    public function setUserPermissions($keyOrArray, $value = null)
+    {
+        if (empty($value)) {
+            $_SESSION['user_permissions'] = $keyOrArray;
+            $this->userPermissions = $keyOrArray;
+        } else {
+            $_SESSION['user_permissions'][$keyOrArray] = $value;
+            $this->userPermissions[$keyOrArray] = $value;
+        }
     }
 
     /**
@@ -75,6 +92,9 @@ class Session
             if (isset($_SESSION['user_info'])) {
                 $this->userInfo = $_SESSION['user_info'];
             }
+            if (isset($_SESSION['user_permissions'])) {
+                $this->userPermissions = $_SESSION['user_permissions'];
+            }
         }
     }
 
@@ -105,8 +125,11 @@ class Session
      */
     public function verifyUserPermission($object)
     {
-        // TODO: проверка разрешений на доступ к контенту
-        return true;
+        if (empty($this->userPermissions[$object])) {
+            return false;
+        } else {
+            return $this->userPermissions[$object];
+        }
     }
 
     /**
@@ -119,5 +142,6 @@ class Session
         $this->userInfo = array();
         $_SESSION['user_logged_in'] = false;
         unset($_SESSION['user_info']);
+        unset($_SESSION['user_permissions']);
     }
 }

@@ -27,4 +27,25 @@ class Users extends Model
         }
         return $result;
     }
+
+    /**
+     * @param $user_id
+     * @return array
+     */
+    public function getUserPermissions($user_id)
+    {
+        $sql = "SELECT item, rights FROM permission WHERE user_id = :user_id";
+        $query = $this->db->prepare($sql);
+        $query->execute(array(':user_id' => $user_id));
+        $permissions = $query->fetchAll();
+        $result["success"] = false;
+        if (count($permissions) != 0) {
+            $result["success"] = true;
+            foreach ($permissions as $index => $permission) {
+                $result["user_permissions"][$permission['item']] = boolval($permission['rights']);
+            }
+
+        }
+        return $result;
+    }
 }

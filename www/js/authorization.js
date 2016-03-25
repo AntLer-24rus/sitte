@@ -1,4 +1,4 @@
-function errorAjax(httpR, type_error) {
+function authorization_error(httpR, type_error) {
     switch (type_error) {
         case "error":
         {
@@ -86,7 +86,7 @@ function login() {
             data: {data: {func: "step_one", arg: login}},
             dataType: "json",
             success: authorization,
-            error: errorAjax
+            error: authorization_error
         });
     }
 }

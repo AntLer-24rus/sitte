@@ -18,6 +18,8 @@ class View
      * @var string
      */
     private $views = "";
+    private $css = array();
+    private $js = array();
 
     /**
      * View constructor.
@@ -39,6 +41,22 @@ class View
         ob_start();
         include_once VIEWS_PATH . $view . '.php';
         $this->views .= ob_get_clean();
+    }
+
+    function add_css($file_name)
+    {
+        $file_css_from_controller = 'css/' . strtolower($file_name) . '.css';
+        if (file_exists($file_css_from_controller)) {
+            array_push($this->css, $file_css_from_controller);
+        }
+    }
+
+    function add_js($file_name)
+    {
+        $file_css_from_controller = 'js/' . strtolower($file_name) . '.js';
+        if (file_exists($file_css_from_controller)) {
+            array_push($this->js, $file_css_from_controller);
+        }
     }
 
     /**
@@ -96,18 +114,26 @@ class View
             <link rel='icon' href='/favicon.ico' type='image/x-icon'>
             <link rel='shortcut icon' href='/favicon.ico' type='image/x-icon'>
 
-            <link rel="stylesheet" type="text/css" href="/css/styleMy.css"/>
+            <link rel="stylesheet" type="text/css" href="/css/common.css"/>
             <link rel="stylesheet" type="text/css" href="/css/bar.css"/>
-            <link rel="stylesheet" type="text/css" href="/css/google_buttones.css"/>
+            <link rel="stylesheet" type="text/css" href="/css/menu.css"/>
+            <link rel="stylesheet" type="text/css" href="/css/google_buttons.css"/>
+            <?php
+            foreach ($this->css as $file) {
+                echo '<link rel="stylesheet" type="text/css" href="/' . $file . '"/>';
+            }
+            ?>
 
-            <!--            <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>-->
-            <!--            <script type="text/javascript" src="/js/jquery-ui.min.js"></script>-->
-
-            <!--            <script type="text/javascript" src="/js/cryptojs-sha256.js"></script>-->
             <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
             <script type="text/javascript" src="/bower_components/cryptojslib/rollups/aes.js"></script>
             <script type="text/javascript" src="/bower_components/cryptojslib/rollups/sha256.js"></script>
-            <!--            <script type="text/javascript" src="/js/cryptojs-aes.js"></script>-->
+
+            <script type="text/javascript" src="/js/authorization.js"></script>
+            <?php
+            foreach ($this->js as $file) {
+                echo '<script type="text/javascript" src="/' . $file . '"></script>';
+            }
+            ?>
         </head>
         <body>
         <div id="bar">
@@ -128,14 +154,14 @@ class View
             </div>
         </div>
         <div id="wrapper">
-            <div id="page">
-                <?php echo $this->views; ?>
-            </div>
+            <!--            <div id="page">-->
+            <?php echo $this->views; ?>
+            <!--            </div>-->
             <div id="footer">
                 <a href="http://vk.com/antler">code by AntLer &copy; 2015</a>
             </div>
         </body>
-        <script src="/js/authorization.js" type="text/javascript"></script>
+
         </html>
         <?php
     }

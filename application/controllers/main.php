@@ -10,7 +10,7 @@ class Main extends Controller
 {
     function index()
     {
-        $this->view->append_view('TODO_view', 'есть в ветке develop');
+        $this->view->append_view('main_view');
         $this->view->render();
     }
 }

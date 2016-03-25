@@ -59,6 +59,10 @@ class Login extends Controller
                         if ($pass) {
                             $test_hash = hash("sha256", $this->session->getUserInfo("login") . ":" . $pass);
                             if ($test_hash == $this->session->getUserInfo("hash")) {
+                                $user_perm = $this->model->getUserPermissions($this->session->getUserInfo("id"));
+                                if ($user_perm["success"]) {
+                                    $this->session->setUserPermissions($user_perm["user_permissions"]);
+                                }
                                 $this->session->login();
                                 $response["success"] = true;
                                 $response["userpic_view"] = $this->view->get_string_template("userinfo_view");
