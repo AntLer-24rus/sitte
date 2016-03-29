@@ -20,9 +20,9 @@ class Route
                 $this->url_controller = new $this->url_controller();
             } catch (Exception $e) {
                 $this->ErrorPage('500');
-                $data = "Выброшено исключение:\n" . $e->getMessage();
-                include VIEWS_PATH . 'test_view.php';
-                return;
+                header('Content-Type: text/plain; charset=utf-8');
+                echo "Выброшено исключение:\n" . $e->getMessage();
+                exit();
             }
             // проверка метода: url_action НЕ пустой ?
             if ($this->url_action) {

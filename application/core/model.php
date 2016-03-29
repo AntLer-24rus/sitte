@@ -21,7 +21,7 @@ abstract class Model {
 
     /**
      * Model constructor.
-     * @param Database $controller [@see Model::$controller}
+     * @param Controller $controller [@see Model::$controller}
      */
     public function __construct($controller)
     {

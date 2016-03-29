@@ -1,0 +1,97 @@
+/*-------------------------------------------------------------------------------------------------------------------*/
+#page {
+    margin: 0 auto;
+    position: relative;
+    width: 1100px;
+    padding: 5px 5px 0;
+}
+
+#page table {
+    border: 1px solid;
+    line-height: normal;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+#page th {
+    /*border-collapse: collapse;*/
+    /*background: linear-gradient( #00ff00, #007f00);*/
+    background-color: #b1b1b1;
+    border: 1px solid #000000;
+    border-bottom-width: 2px;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Helvetica", sans-serif;
+    /*color:#ffffff;*/
+    /*padding: 4px 0;*/
+    height: 40px;
+}
+
+#page td {
+    border: 1px solid;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: "Helvetica", sans-serif;
+    height: 20px;
+    padding: 1px 4px;
+}
+
+#total_contractor {
+    text-align: right;
+}
+
+#num {
+    width: 86px;
+}
+
+#contractor {
+    width: 291px;
+}
+
+#sum {
+    width: 85px;
+}
+
+#date {
+    width: 90px;
+}
+
+#date_create {
+    width: 140px;
+}
+
+#address {
+    width: 140px;
+}
+
+/*-------------------------------------------------------------------------------------------------------------------*/
+
+.form-container {
+    /*border: 1px solid #000000;*/
+    padding: 20px;
+    width: 300px;
+    margin: 0 auto;
+}
+
+.form-field {
+
+    padding: 2px;
+    margin-bottom: 5px;
+    width: 280px;
+}
+
+.submit-container {
+    margin: 8px 0;
+    text-align: center;
+}
+
+.submit-button {
+    border: 1px solid;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    font-family: helvetica, serif;
+    width: 56px;
+    padding: 2px 0px;
+    font-size: 14px;
+}

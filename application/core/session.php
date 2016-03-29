@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Session class
  *
@@ -6,20 +7,78 @@
  * gets values, and closes the session properly (=logout). Those methods
  * are STATIC, which means you can call them with Session::get(XXX);
  */
-class Session {
+class Session
+{
     /**
-     *  Идентификатор сессии
+     * Идентификатор сессии
      * @var string
      */
-    public $id;
+    private $id = "";
     /**
      * Состояние сессии
      * @var bool
      */
-    public $userLoggedIn;
+    private $userLoggedIn = false;
+    /**
+     * Массив для данных о вошедшем пользователе
+     * @var array
+     */
+    private $userInfo = array();
+    private $userPermissions = array();
 
     /**
-     * Session constructor.
+     * Устанавливает информацию о пользователе
+     * @param mixed $keyOrArray Может быть именем свойства или массивом со свойствами
+     * @param mixed $value Значение свойсва переданного первым параметром
+     */
+    public function setUserInfo($keyOrArray, $value = null)
+    {
+        if (empty($value)) {
+            $_SESSION['user_info'] = $keyOrArray;
+            $this->userInfo = $keyOrArray;
+        } else {
+            $_SESSION['user_info'][$keyOrArray] = $value;
+            $this->userInfo[$keyOrArray] = $value;
+        }
+
+    }
+
+    /**
+     * Устанавливает информацию о разрешения пользователя
+     * @param mixed $keyOrArray Может быть именем свойства или массивом со свойствами
+     * @param mixed $value Значение свойсва переданного первым параметром
+     */
+    public function setUserPermissions($keyOrArray, $value = null)
+    {
+        if (empty($value)) {
+            $_SESSION['user_permissions'] = $keyOrArray;
+            $this->userPermissions = $keyOrArray;
+        } else {
+            $_SESSION['user_permissions'][$keyOrArray] = $value;
+            $this->userPermissions[$keyOrArray] = $value;
+        }
+    }
+
+    /**
+     * Отдает свойство пользователя или весь массив свойств
+     * @param null $key Имя свойства, если не заданно отдает весь массив
+     * @return array
+     */
+    public function getUserInfo($key = null)
+    {
+        if (empty($key)) {
+            return $this->userInfo;
+        } else {
+            if (isset($this->userInfo[$key])) {
+                return $this->userInfo[$key];
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Session constructor. старует сессия и заполняет переменные из массива $_SESSION
      */
     public function __construct()
     {
@@ -29,52 +88,60 @@ class Session {
             $this->id = session_id();
             if (isset($_SESSION['user_logged_in'])) {
                 $this->userLoggedIn = $_SESSION['user_logged_in'];
-            } else {
-                $this->userLoggedIn = false;
+            }
+            if (isset($_SESSION['user_info'])) {
+                $this->userInfo = $_SESSION['user_info'];
+            }
+            if (isset($_SESSION['user_permissions'])) {
+                $this->userPermissions = $_SESSION['user_permissions'];
             }
         }
     }
 
     /**
-     * starts the session
+     *  Вход пользователя
      */
-    public static function init()
+    public function login()
     {
-        // if no session exist, start the session
-        if (session_id() == '') {
-            session_start();
-            $_SESSION['session_id'] = session_id();
-            if (!isset($_SESSION['user_logged_in'])) {
-                $_SESSION['user_logged_in'] = false;
-            }
+        $this->userLoggedIn = true;
+        $_SESSION['user_logged_in'] = true;
+        unset($_SESSION['user_info']['hash']);
+        unset($_SESSION['user_info']['rnd_key']);
+    }
+
+    /**
+     * Возвращает статус пользователя
+     * @return bool
+     */
+    public function isLogin()
+    {
+        return $this->userLoggedIn;
+    }
+
+    /**
+     * Проверяет разрешения пользователя на доступ к контенту
+     * @param string $object Объект для проверки разрешений
+     * @return bool
+     */
+    public function verifyUserPermission($object)
+    {
+        if (empty($this->userPermissions[$object])) {
+            return false;
+        } else {
+            return $this->userPermissions[$object];
         }
     }
+
     /**
-     * sets a specific value to a specific key of the session
-     * @param mixed $key
-     * @param mixed $value
+     * Удаляет информацию пользователя из сесии
      */
-    public static function set($key, $value)
+    public function logout()
     {
-        $_SESSION[$key] = $value;
-    }
-    /**
-     * gets/returns the value of a specific key of the session
-     * @param mixed $key Usually a string, right ?
-     * @return mixed
-     */
-    public static function get($key)
-    {
-        if (isset($_SESSION[$key])) {
-            return $_SESSION[$key];
-        }
-        return null;
-    }
-    /**
-     * deletes the session (= logs the user out)
-     */
-    public static function destroy()
-    {
-        session_destroy();
+        $this->userLoggedIn = false;
+        $this->id = "";
+        $this->userInfo = array();
+        $_SESSION['user_logged_in'] = false;
+        unset($_SESSION['user_info']);
+        unset($_SESSION['user_permissions']);
     }
 }
