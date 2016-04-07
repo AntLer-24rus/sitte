@@ -1,0 +1,24 @@
+{
+  "name": "test",
+  "authors": [
+    "Антон <antler@inbox.ru>"
+  ],
+  "description": "info",
+  "main": "",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "cryptojslib": "^3.1.2",
+    "jquery": "^2.2.2"
+  }
+}
