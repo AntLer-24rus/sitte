@@ -26,7 +26,7 @@ ini_set('session.name','SID');
  * if you are using a (different) port, then put this in here, like http://mydomain:8888/subfolder/
  * Note: The trailing slash is important!
  */
-define('URL', 'http://finance-expressantler.rhcloud.com/');
+define('URL', $_SERVER['SERVER_NAME']);
 /**
  * Configuration for: Folders
  * Here you define where your folders are. Unless you have renamed them, there's no need to change this.
